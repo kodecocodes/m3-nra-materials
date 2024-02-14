@@ -3,7 +3,7 @@ package com.yourcompany.android.moviediary.networking
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 
-private const val BASE_URL = ""
+private const val BASE_URL = "https://http-api-93211a10efe2.herokuapp.com/"
 
 private fun buildClient(): OkHttpClient = OkHttpClient.Builder().build()
 
