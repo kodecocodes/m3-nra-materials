@@ -22,6 +22,6 @@ interface MovieDiaryApiService {
   @GET("movies")
   fun getMovies(): Call<ResponseBody>
 
-  @PUT("movies")
+  @POST("movies")
   fun postReview(@Body body: RequestBody): Call<ResponseBody>
 }

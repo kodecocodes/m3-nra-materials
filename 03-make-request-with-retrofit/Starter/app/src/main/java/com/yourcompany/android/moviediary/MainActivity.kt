@@ -43,9 +43,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.getSystemService
+import com.yourcompany.android.moviediary.networking.ConnectivityChecker
 import com.yourcompany.android.moviediary.networking.MovieDiaryApi
-import com.yourcompany.android.moviediary.ui.login.LoginScreen
+import com.yourcompany.android.moviediary.networking.buildMovieDiaryService
 import com.yourcompany.android.moviediary.ui.movies.HomeScreen
+import com.yourcompany.android.moviediary.ui.login.LoginScreen
 import com.yourcompany.android.moviediary.ui.navigation.Screens
 import com.yourcompany.android.moviediary.ui.profile.ProfileScreen
 import com.yourcompany.android.moviediary.ui.register.RegisterScreen
@@ -53,8 +55,9 @@ import com.yourcompany.android.moviediary.ui.theme.MovieDiaryTheme
 
 class MainActivity : ComponentActivity() {
 
-  private val movieApi by lazy { MovieDiaryApi() }
+  private val movieApi by lazy { MovieDiaryApi(buildMovieDiaryService()) }
   private val connectivityManager by lazy { getSystemService<ConnectivityManager>() }
+  private val connectivityChecker by lazy { ConnectivityChecker(connectivityManager) }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     // Switch to AppTheme for displaying the activity
@@ -72,6 +75,7 @@ class MainActivity : ComponentActivity() {
             Screens.LOGIN -> {
               LoginScreen(
                 movieDiaryApi = movieApi,
+                connectivityChecker = connectivityChecker,
                 onLogin = { token ->
                   App.saveUserToken(token)
                   userLoggedIn = true
@@ -84,6 +88,7 @@ class MainActivity : ComponentActivity() {
             Screens.REGISTER -> {
               RegisterScreen(
                 movieDiaryApi = movieApi,
+                connectivityChecker = connectivityChecker,
                 onUserRegistered = { currentScreen = Screens.LOGIN },
                 onLoginTapped = { currentScreen = Screens.LOGIN })
             }
@@ -99,10 +104,7 @@ class MainActivity : ComponentActivity() {
               ProfileScreen(
                 movieDiaryApi = movieApi,
                 onBack = { currentScreen = Screens.HOME },
-                onLogout = {
-                  App.saveUserToken("")
-                  currentScreen = Screens.LOGIN
-                })
+                onLogout = { currentScreen = Screens.LOGIN })
             }
           }
         }

@@ -70,6 +70,6 @@ class MovieDiaryApi(private val apiService: MovieDiaryApiService) {
   }
 
   suspend fun getProfile(): User {
-    return User("")
+    return User("", "")
   }
 }

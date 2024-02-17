@@ -1,11 +1,13 @@
 package com.yourcompany.android.moviediary.ui.register
 
+import android.net.ConnectivityManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
@@ -21,22 +23,27 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.getSystemService
+import com.yourcompany.android.moviediary.networking.ConnectivityChecker
 import com.yourcompany.android.moviediary.networking.MovieDiaryApi
+import com.yourcompany.android.moviediary.ui.theme.MovieDiaryTheme
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterScreen(
   movieDiaryApi: MovieDiaryApi,
+  connectivityChecker: ConnectivityChecker,
   onUserRegistered: () -> Unit = {},
   onLoginTapped: () -> Unit,
 ) {
   val scaffoldState = rememberScaffoldState()
   val screenScope = rememberCoroutineScope()
-  val focusManager = LocalFocusManager.current
 
   var username by remember { mutableStateOf("") }
   var email by remember { mutableStateOf("") }
@@ -76,20 +83,23 @@ fun RegisterScreen(
         visualTransformation = PasswordVisualTransformation(),
       )
       Button(onClick = {
-        focusManager.clearFocus()
         screenScope.launch {
           if (username.isNotBlank() && email.isNotBlank() && password.isNotBlank()) {
-            movieDiaryApi.registerUser(username, email, password) { message, error ->
-              screenScope.launch {
-                if (error != null) {
-                  scaffoldState.snackbarHostState.showSnackbar(error.message ?: "")
-                } else {
-                  onUserRegistered()
+            if (connectivityChecker.hasNetworkConnection()) {
+              movieDiaryApi.registerUser(username, email, password) { message, error ->
+                screenScope.launch {
+                  if (message == null) {
+                    scaffoldState.snackbarHostState.showSnackbar(error?.message ?: "")
+                  } else {
+                    onUserRegistered()
+                  }
                 }
               }
+            } else {
+              scaffoldState.snackbarHostState.showSnackbar("Check your network connection.")
             }
           } else {
-            scaffoldState.snackbarHostState.showSnackbar("Check your network connection.")
+            scaffoldState.snackbarHostState.showSnackbar("Please fill in all the fields.")
           }
         }
       }) {

@@ -24,6 +24,6 @@ interface MovieDiaryApiService {
   @GET("user")
   fun getProfile(): Call<User>
 
-  @PUT("movies")
+  @POST("movies")
   fun postReview(@Body movieReview: MovieReview): Call<MovieReview>
 }

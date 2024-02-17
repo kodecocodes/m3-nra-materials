@@ -54,12 +54,12 @@ import com.yourcompany.android.moviediary.ui.theme.MovieDiaryTheme
 class MainActivity : ComponentActivity() {
 
   private val movieApi = MovieDiaryApi()
+  private val connectivityManager by lazy { getSystemService<ConnectivityManager>() }
+  private val connectivityChecker by lazy { ConnectivityChecker(connectivityManager) }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     // Switch to AppTheme for displaying the activity
     setTheme(R.style.AppTheme)
-    val connectivityManager = getSystemService<ConnectivityManager>()
-    val connectivityChecker = ConnectivityChecker(connectivityManager)
 
     super.onCreate(savedInstanceState)
     setContent {
@@ -83,6 +83,7 @@ class MainActivity : ComponentActivity() {
             Screens.REGISTER -> {
               RegisterScreen(
                 movieDiaryApi = movieApi,
+                connectivityChecker = connectivityChecker,
                 onUserRegistered = { currentScreen = Screens.LOGIN },
                 onLoginTapped = { currentScreen = Screens.LOGIN })
             }

@@ -25,6 +25,6 @@ interface MovieDiaryApiService {
   @GET("user")
   suspend fun getProfile(): User
 
-  @PUT("movies")
+  @POST("movies")
   suspend fun postReview(@Body movieReview: MovieReview): MovieReview
 }

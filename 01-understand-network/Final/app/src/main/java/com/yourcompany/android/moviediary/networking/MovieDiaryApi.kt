@@ -71,6 +71,6 @@ class MovieDiaryApi {
   }
 
   suspend fun getMe(): User {
-    return User("")
+    return User("", "")
   }
 }

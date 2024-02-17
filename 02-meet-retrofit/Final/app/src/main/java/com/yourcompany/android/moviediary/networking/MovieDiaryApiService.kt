@@ -18,6 +18,6 @@ interface MovieDiaryApiService {
   @GET("movies")
   fun getMovies()
 
-  @PUT("movies")
+  @POST("movies")
   fun makeEntry()
 }

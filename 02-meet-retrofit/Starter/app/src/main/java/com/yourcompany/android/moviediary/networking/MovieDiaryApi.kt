@@ -25,7 +25,8 @@ class MovieDiaryApi {
         put("password", password)
       }
 
-      val connection = URL("https://http-api-93211a10efe2.herokuapp.com/user/register").openConnection() as HttpsURLConnection
+      val connection =
+        URL("https://http-api-93211a10efe2.herokuapp.com/user/register").openConnection() as HttpsURLConnection
       connection.apply {
         setRequestProperty("Content-Type", "application/json")
         setRequestProperty("Accept", "application/json")
@@ -71,6 +72,6 @@ class MovieDiaryApi {
   }
 
   suspend fun getMe(): User {
-    return User("")
+    return User("", "")
   }
 }
