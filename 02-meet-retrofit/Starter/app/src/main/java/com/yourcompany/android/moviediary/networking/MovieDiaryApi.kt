@@ -57,7 +57,7 @@ class MovieDiaryApi {
           onUserRegistered(response.toString(), null)
         }
       } catch (error: Throwable) {
-        onUserRegistered(null, error)
+        onUserRegistered(null, Throwable("An error occurred. Please try again."))
       } finally {
         connection.disconnect()
       }
