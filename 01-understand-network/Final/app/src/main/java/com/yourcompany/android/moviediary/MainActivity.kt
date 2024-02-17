@@ -83,7 +83,6 @@ class MainActivity : ComponentActivity() {
             Screens.REGISTER -> {
               RegisterScreen(
                 movieDiaryApi = movieApi,
-                connectivityChecker = connectivityChecker,
                 onUserRegistered = { currentScreen = Screens.LOGIN },
                 onLoginTapped = { currentScreen = Screens.LOGIN })
             }

@@ -86,9 +86,6 @@ fun RegisterScreen(
         if (username.isNotBlank() && email.isNotBlank() && password.isNotBlank()) {
           if (connectivityChecker.hasNetworkConnection()) {
             screenScope.launch {
-              println("Delaying...")
-              delay(10000)
-              println("Am I here?")
               movieDiaryApi.registerUser(username, email, password) { message, error ->
                 screenScope.launch {
                   scaffoldState.snackbarHostState.showSnackbar(message ?: error?.message ?: "")
