@@ -11,7 +11,7 @@ class MovieDiaryApi {
     password: String,
     onUserRegistered: (String?, Throwable?) -> Unit,
   ) {
-    // TODO: Implement with HttpUrlConnection
+    // TODO: Implement with HttpsUrlConnection
   }
 
   suspend fun loginUser(username: String, password: String, onResponse: (String?, Throwable?) -> Unit) {
