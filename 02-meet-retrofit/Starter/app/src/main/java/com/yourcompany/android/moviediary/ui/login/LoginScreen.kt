@@ -25,13 +25,15 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.yourcompany.android.moviediary.networking.ConnectivityChecker
 import com.yourcompany.android.moviediary.networking.MovieDiaryApi
 import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
   movieDiaryApi: MovieDiaryApi,
-  onLogin: (String) -> Unit,
+  connectivityChecker: ConnectivityChecker,
+  onLogin: () -> Unit,
   onRegisterTapped: () -> Unit,
 ) {
   val scaffoldState = rememberScaffoldState()
@@ -68,19 +70,27 @@ fun LoginScreen(
       )
       Button(onClick = {
         focusManager.clearFocus()
-        screenScope.launch {
-          if (username.isNotBlank() && password.isNotBlank()) {
-            movieDiaryApi.loginUser(username, password) { token, error ->
-              if (token == null) {
-                screenScope.launch {
-                  scaffoldState.snackbarHostState.showSnackbar(error?.message ?: "")
+        if (username.isNotBlank() && password.isNotBlank()) {
+          if (connectivityChecker.hasNetworkConnection()) {
+            screenScope.launch {
+              movieDiaryApi.loginUser(username, password) { error ->
+                if (error != null) {
+                  screenScope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar(error.message ?: "")
+                  }
+                } else {
+                  onLogin()
                 }
-              } else {
-                onLogin(token)
               }
             }
           } else {
-            scaffoldState.snackbarHostState.showSnackbar("Check your network connection.")
+            screenScope.launch {
+              scaffoldState.snackbarHostState.showSnackbar("Check your network connection.")
+            }
+          }
+        } else {
+          screenScope.launch {
+            scaffoldState.snackbarHostState.showSnackbar("Please fill in all the fields.")
           }
         }
       }) {

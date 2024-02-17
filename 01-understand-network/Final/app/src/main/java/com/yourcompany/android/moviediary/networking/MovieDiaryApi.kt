@@ -1,13 +1,12 @@
 package com.yourcompany.android.moviediary.networking
 
-import com.yourcompany.android.moviediary.model.Movie
+import com.yourcompany.android.moviediary.model.MovieReview
 import com.yourcompany.android.moviediary.model.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.net.HttpURLConnection
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
@@ -67,7 +66,7 @@ class MovieDiaryApi {
     // TODO: Implement this with Retrofit
   }
 
-  suspend fun getMovies(): List<Movie> {
+  suspend fun getMovies(): List<MovieReview> {
     return emptyList()
   }
 
