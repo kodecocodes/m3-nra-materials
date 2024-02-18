@@ -110,7 +110,7 @@ fun LoginScreen(
               }
             }
           } else {
-            scaffoldState.snackbarHostState.showSnackbar("Check your network connection.")
+            scaffoldState.snackbarHostState.showSnackbar("Please fill in all the fields.")
           }
         }
       }) {

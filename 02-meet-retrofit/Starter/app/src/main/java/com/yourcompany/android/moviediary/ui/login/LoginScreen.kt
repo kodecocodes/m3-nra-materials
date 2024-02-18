@@ -63,7 +63,7 @@ import kotlinx.coroutines.launch
 fun LoginScreen(
   movieDiaryApi: MovieDiaryApi,
   connectivityChecker: ConnectivityChecker,
-  onLogin: () -> Unit,
+  onLogin: (String) -> Unit,
   onRegisterTapped: () -> Unit,
 ) {
   val scaffoldState = rememberScaffoldState()
@@ -103,13 +103,13 @@ fun LoginScreen(
         if (username.isNotBlank() && password.isNotBlank()) {
           if (connectivityChecker.hasNetworkConnection()) {
             screenScope.launch {
-              movieDiaryApi.loginUser(username, password) { error ->
-                if (error != null) {
+              movieDiaryApi.loginUser(username, password) { token, error ->
+                if (token == null) {
                   screenScope.launch {
-                    scaffoldState.snackbarHostState.showSnackbar(error.message ?: "")
+                    scaffoldState.snackbarHostState.showSnackbar(error?.message ?: "")
                   }
                 } else {
-                  onLogin()
+                  onLogin(token)
                 }
               }
             }
