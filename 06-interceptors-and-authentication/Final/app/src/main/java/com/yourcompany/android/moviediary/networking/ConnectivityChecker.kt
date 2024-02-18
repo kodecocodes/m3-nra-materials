@@ -41,5 +41,6 @@ class ConnectivityChecker(private val connectivityManager: ConnectivityManager?)
     return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
       || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
       || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
+      || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
   }
 }
