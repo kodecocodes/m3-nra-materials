@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     setContent {
       var userLoggedIn by remember { mutableStateOf(App.getUserToken().isNotBlank()) }
-      var currentScreen by remember { mutableStateOf(if (userLoggedIn) Screens.HOME else Screens.LOGIN) }
+      var currentScreen by remember { mutableStateOf(if (userLoggedIn) Screens.MOVIES else Screens.LOGIN) }
 
       MovieDiaryTheme {
         // A surface container using the 'background' color from the theme
@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
                 onLogin = { loginResponse ->
                   App.saveUserToken(loginResponse.token)
                   userLoggedIn = true
-                  currentScreen = Screens.HOME
+                  currentScreen = Screens.MOVIES
                 },
                 onRegisterTapped = { currentScreen = Screens.REGISTER }
               )
@@ -93,7 +93,7 @@ class MainActivity : ComponentActivity() {
                 onLoginTapped = { currentScreen = Screens.LOGIN })
             }
 
-            Screens.HOME -> {
+            Screens.MOVIES -> {
               HomeScreen(
                 movieDiaryApi = movieApi,
                 onProfileTapped = { currentScreen = Screens.PROFILE },
@@ -103,7 +103,7 @@ class MainActivity : ComponentActivity() {
             Screens.PROFILE -> {
               ProfileScreen(
                 movieDiaryApi = movieApi,
-                onBack = { currentScreen = Screens.HOME },
+                onBack = { currentScreen = Screens.MOVIES },
                 onLogout = {
                   App.saveUserToken("")
                   currentScreen = Screens.LOGIN
