@@ -30,14 +30,13 @@
 
 package com.yourcompany.android.moviediary.networking
 
-import com.yourcompany.android.moviediary.model.Movie
+import com.yourcompany.android.moviediary.model.MovieReview
 import com.yourcompany.android.moviediary.model.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.net.HttpURLConnection
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
@@ -56,7 +55,7 @@ class MovieDiaryApi {
         put("password", password)
       }
 
-      val connection = URL("http://10.0.2.2:8080/user").openConnection() as HttpsURLConnection
+      val connection = URL("https://http-api-93211a10efe2.herokuapp.com/user/register").openConnection() as HttpsURLConnection
       connection.apply {
         setRequestProperty("Content-Type", "application/json")
         setRequestProperty("Accept", "application/json")
@@ -87,7 +86,7 @@ class MovieDiaryApi {
           onUserRegistered(response.toString(), null)
         }
       } catch (error: Throwable) {
-        onUserRegistered(null, error)
+        onUserRegistered(null, Throwable("An error occurred. Please try again."))
       } finally {
         connection.disconnect()
       }
@@ -97,11 +96,11 @@ class MovieDiaryApi {
     // TODO: Implement this with Retrofit
   }
 
-  suspend fun getMovies(): List<Movie> {
+  suspend fun getMovies(): List<MovieReview> {
     return emptyList()
   }
 
   suspend fun getMe(): User {
-    return User("")
+    return User("", "")
   }
 }

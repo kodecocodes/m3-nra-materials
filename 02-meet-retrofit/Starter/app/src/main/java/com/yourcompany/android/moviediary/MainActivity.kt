@@ -43,40 +43,39 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.getSystemService
-import com.yourcompany.android.moviediary.networking.MovieDiaryApi
+import com.yourcompany.android.moviediary.ui.home.HomeScreen
 import com.yourcompany.android.moviediary.ui.login.LoginScreen
-import com.yourcompany.android.moviediary.ui.movies.HomeScreen
 import com.yourcompany.android.moviediary.ui.navigation.Screens
-import com.yourcompany.android.moviediary.ui.profile.ProfileScreen
+import com.yourcompany.android.moviediary.networking.ConnectivityChecker
+import com.yourcompany.android.moviediary.networking.MovieDiaryApi
 import com.yourcompany.android.moviediary.ui.register.RegisterScreen
 import com.yourcompany.android.moviediary.ui.theme.MovieDiaryTheme
 
 class MainActivity : ComponentActivity() {
 
-  private val movieApi by lazy { MovieDiaryApi() }
-  private val connectivityManager by lazy { getSystemService<ConnectivityManager>() }
+  private val movieApi = MovieDiaryApi()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     // Switch to AppTheme for displaying the activity
     setTheme(R.style.AppTheme)
+    val connectivityManager = getSystemService<ConnectivityManager>()
+    val connectivityChecker = ConnectivityChecker(connectivityManager)
 
     super.onCreate(savedInstanceState)
     setContent {
-      var userLoggedIn by remember { mutableStateOf(App.getUserToken().isNotBlank()) }
-      var currentScreen by remember { mutableStateOf(if (userLoggedIn) Screens.HOME else Screens.LOGIN) }
+      var currentScreen by remember { mutableStateOf(Screens.LOGIN) }
+      var userLoggedIn by remember { mutableStateOf(false) }
 
       MovieDiaryTheme {
         // A surface container using the 'background' color from the theme
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
+          if (userLoggedIn) currentScreen = Screens.HOME else Screens.LOGIN
           when (currentScreen) {
             Screens.LOGIN -> {
               LoginScreen(
-                movieDiaryApi = movieApi,
-                onLogin = { token ->
-                  App.saveUserToken(token)
-                  userLoggedIn = true
-                  currentScreen = Screens.HOME
-                },
+                movieApi,
+                connectivityChecker,
+                onLogin = { userLoggedIn = true },
                 onRegisterTapped = { currentScreen = Screens.REGISTER }
               )
             }
@@ -84,25 +83,13 @@ class MainActivity : ComponentActivity() {
             Screens.REGISTER -> {
               RegisterScreen(
                 movieDiaryApi = movieApi,
+                connectivityChecker = connectivityChecker,
                 onUserRegistered = { currentScreen = Screens.LOGIN },
                 onLoginTapped = { currentScreen = Screens.LOGIN })
             }
 
             Screens.HOME -> {
-              HomeScreen(
-                movieDiaryApi = movieApi,
-                onProfileTapped = { currentScreen = Screens.PROFILE },
-              )
-            }
-
-            Screens.PROFILE -> {
-              ProfileScreen(
-                movieDiaryApi = movieApi,
-                onBack = { currentScreen = Screens.HOME },
-                onLogout = {
-                  App.saveUserToken("")
-                  currentScreen = Screens.LOGIN
-                })
+              HomeScreen()
             }
           }
         }

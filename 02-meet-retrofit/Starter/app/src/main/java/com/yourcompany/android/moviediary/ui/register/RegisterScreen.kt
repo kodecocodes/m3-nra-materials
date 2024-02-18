@@ -55,12 +55,14 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.yourcompany.android.moviediary.networking.ConnectivityChecker
 import com.yourcompany.android.moviediary.networking.MovieDiaryApi
 import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterScreen(
   movieDiaryApi: MovieDiaryApi,
+  connectivityChecker: ConnectivityChecker,
   onUserRegistered: () -> Unit = {},
   onLoginTapped: () -> Unit,
 ) {
@@ -107,19 +109,27 @@ fun RegisterScreen(
       )
       Button(onClick = {
         focusManager.clearFocus()
-        screenScope.launch {
-          if (username.isNotBlank() && email.isNotBlank() && password.isNotBlank()) {
-            movieDiaryApi.registerUser(username, email, password) { message, error ->
-              screenScope.launch {
-                if (error != null) {
-                  scaffoldState.snackbarHostState.showSnackbar(error.message ?: "")
-                } else {
-                  onUserRegistered()
+        if (username.isNotBlank() && email.isNotBlank() && password.isNotBlank()) {
+          if (connectivityChecker.hasNetworkConnection()) {
+            screenScope.launch {
+              movieDiaryApi.registerUser(username, email, password) { message, error ->
+                screenScope.launch {
+                  if (error != null) {
+                    scaffoldState.snackbarHostState.showSnackbar(error.message ?: "")
+                  } else {
+                    onUserRegistered()
+                  }
                 }
               }
             }
           } else {
-            scaffoldState.snackbarHostState.showSnackbar("Check your network connection.")
+            screenScope.launch {
+              scaffoldState.snackbarHostState.showSnackbar("Check your network connection.")
+            }
+          }
+        } else {
+          screenScope.launch {
+            scaffoldState.snackbarHostState.showSnackbar("Please fill in all the fields.")
           }
         }
       }) {

@@ -60,8 +60,10 @@ fun ProfileScreen(
   val screenScope = rememberCoroutineScope()
   var username by remember { mutableStateOf("") }
   LaunchedEffect(Unit) {
-    // TODO: Implement getProfile request here
+    movieDiaryApi.getProfile { user, throwable ->
+      username = user?.username ?: ""
     }
+  }
 
   Scaffold(topBar = {
     TopAppBar(

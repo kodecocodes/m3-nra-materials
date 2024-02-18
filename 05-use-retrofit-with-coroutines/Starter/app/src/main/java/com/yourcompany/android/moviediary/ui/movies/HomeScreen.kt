@@ -68,14 +68,30 @@ fun HomeScreen(
   var movieReviewList by remember { mutableStateOf<List<MovieReview>>(emptyList()) }
 
   LaunchedEffect(Unit) {
-    // TODO: Implement getMovies here
+    movieDiaryApi.getMovies { movies, throwable ->
+      if (!movies.isNullOrEmpty()) {
+        movieReviewList = movies
+      }
+    }
   }
 
   if (openDialog) {
     NewEntryDialog(
       onDismissRequest = { openDialog = false },
-      onConfirmation = {// TODO: Implement post new entry
-      }
+      onConfirmation = { movieReview ->
+        movieDiaryApi.postReview(movieReview, onResponse = { newReview, error ->
+          if (newReview != null) {
+            val newList = movieReviewList.toMutableList()
+            newList.add(newReview)
+            movieReviewList = newList
+          } else {
+            screenScope.launch {
+              scaffoldState.snackbarHostState.showSnackbar(error?.message ?: "")
+            }
+          }
+        })
+        openDialog = false
+      },
     )
   }
   Scaffold(topBar = {

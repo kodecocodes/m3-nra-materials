@@ -32,6 +32,9 @@
   xmlns:tools="http://schemas.android.com/tools"
   package="com.yourcompany.android.moviediary">
 
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
   <application
     android:name=".App"
     android:allowBackup="false"
@@ -42,6 +45,7 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/SplashTheme"
+    android:usesCleartextTraffic="true"
     tools:ignore="GoogleAppIndexingWarning"
     tools:targetApi="31">
     <activity

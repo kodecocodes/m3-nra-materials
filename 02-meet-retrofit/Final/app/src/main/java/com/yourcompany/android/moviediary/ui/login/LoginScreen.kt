@@ -51,6 +51,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -67,6 +68,7 @@ fun LoginScreen(
 ) {
   val scaffoldState = rememberScaffoldState()
   val screenScope = rememberCoroutineScope()
+  val focusManager = LocalFocusManager.current
 
   var username by remember { mutableStateOf("") }
   var password by remember { mutableStateOf("") }
@@ -97,6 +99,7 @@ fun LoginScreen(
         visualTransformation = PasswordVisualTransformation(),
       )
       Button(onClick = {
+        focusManager.clearFocus()
         if (username.isNotBlank() && password.isNotBlank()) {
           if (connectivityChecker.hasNetworkConnection()) {
             screenScope.launch {

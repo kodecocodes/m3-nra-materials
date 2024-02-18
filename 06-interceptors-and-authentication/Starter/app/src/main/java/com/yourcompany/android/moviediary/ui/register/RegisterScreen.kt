@@ -30,6 +30,7 @@
 
 package com.yourcompany.android.moviediary.ui.register
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -51,22 +52,27 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.yourcompany.android.moviediary.model.User
+import com.yourcompany.android.moviediary.networking.ConnectivityChecker
 import com.yourcompany.android.moviediary.networking.MovieDiaryApi
 import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterScreen(
   movieDiaryApi: MovieDiaryApi,
+  connectivityChecker: ConnectivityChecker,
   onUserRegistered: () -> Unit = {},
   onLoginTapped: () -> Unit,
 ) {
   val scaffoldState = rememberScaffoldState()
   val screenScope = rememberCoroutineScope()
   val focusManager = LocalFocusManager.current
+  val context = LocalContext.current
 
   var username by remember { mutableStateOf("") }
   var email by remember { mutableStateOf("") }
@@ -109,17 +115,18 @@ fun RegisterScreen(
         focusManager.clearFocus()
         screenScope.launch {
           if (username.isNotBlank() && email.isNotBlank() && password.isNotBlank()) {
-            movieDiaryApi.registerUser(username, email, password) { message, error ->
-              screenScope.launch {
-                if (error != null) {
-                  scaffoldState.snackbarHostState.showSnackbar(error.message ?: "")
-                } else {
-                  onUserRegistered()
-                }
+            if (connectivityChecker.hasNetworkConnection()) {
+              val result = movieDiaryApi.registerUser(username, email, password)
+              result.onSuccess {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                onUserRegistered()
               }
+                .onFailure { scaffoldState.snackbarHostState.showSnackbar(it.message ?: "") }
+            } else {
+              scaffoldState.snackbarHostState.showSnackbar("Check your network connection.")
             }
           } else {
-            scaffoldState.snackbarHostState.showSnackbar("Check your network connection.")
+            scaffoldState.snackbarHostState.showSnackbar("Please fill in all the fields.")
           }
         }
       }) {
