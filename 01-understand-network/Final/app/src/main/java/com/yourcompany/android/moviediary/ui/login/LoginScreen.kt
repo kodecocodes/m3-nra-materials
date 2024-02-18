@@ -21,21 +21,24 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.yourcompany.android.moviediary.networking.ConnectivityChecker
+import com.yourcompany.android.moviediary.networking.MovieDiaryApi
 import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
   movieDiaryApi: MovieDiaryApi,
   connectivityChecker: ConnectivityChecker,
-  onLogin: () -> Unit,
+  onLogin: (String) -> Unit,
   onRegisterTapped: () -> Unit,
 ) {
   val scaffoldState = rememberScaffoldState()
   val screenScope = rememberCoroutineScope()
+  val focusManager = LocalFocusManager.current
 
   var username by remember { mutableStateOf("") }
   var password by remember { mutableStateOf("") }
@@ -66,27 +69,26 @@ fun LoginScreen(
         visualTransformation = PasswordVisualTransformation(),
       )
       Button(onClick = {
-        if (username.isNotBlank() && password.isNotBlank()) {
-          if (connectivityChecker.hasNetworkConnection()) {
-            screenScope.launch {
-              movieDiaryApi.loginUser(username, password) { error ->
-                if (error != null) {
+        focusManager.clearFocus()
+        screenScope.launch {
+          if (username.isNotBlank() && password.isNotBlank()) {
+            if (connectivityChecker.hasNetworkConnection()) {
+              movieDiaryApi.loginUser(username, password) { token, error ->
+                if (token == null) {
                   screenScope.launch {
-                    scaffoldState.snackbarHostState.showSnackbar(error.message ?: "")
+                    scaffoldState.snackbarHostState.showSnackbar(error?.message ?: "")
                   }
                 } else {
-                  onLogin()
+                  onLogin(token)
                 }
               }
+            } else {
+              scaffoldState.snackbarHostState.showSnackbar("Check your network connection.")
             }
           } else {
             screenScope.launch {
-              scaffoldState.snackbarHostState.showSnackbar("Check your network connection.")
+              scaffoldState.snackbarHostState.showSnackbar("Please fill in all the fields.")
             }
-          }
-        } else {
-          screenScope.launch {
-            scaffoldState.snackbarHostState.showSnackbar("Please fill in all the fields.")
           }
         }
       }) {

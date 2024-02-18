@@ -14,7 +14,7 @@ class MovieDiaryApi {
     // TODO: Implement with HttpsUrlConnection
   }
 
-  suspend fun loginUser(username: String, password: String, onResponse: (Throwable?) -> Unit) {
+  suspend fun loginUser(username: String, password: String, onResponse: (String?, Throwable?) -> Unit) {
     // TODO: Implement this with Retrofit
   }
 
