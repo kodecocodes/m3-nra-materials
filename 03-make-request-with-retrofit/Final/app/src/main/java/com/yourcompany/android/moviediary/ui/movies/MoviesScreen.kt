@@ -28,7 +28,7 @@ import com.yourcompany.android.moviediary.networking.MovieDiaryApi
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(
+fun MoviesScreen(
   movieDiaryApi: MovieDiaryApi,
   onProfileTapped: () -> Unit,
 ) {
