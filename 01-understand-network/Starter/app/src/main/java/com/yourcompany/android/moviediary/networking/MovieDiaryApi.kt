@@ -44,15 +44,19 @@ class MovieDiaryApi {
     // TODO: Implement with HttpsUrlConnection
   }
 
-  suspend fun loginUser(username: String, password: String, onResponse: (String?, Throwable?) -> Unit) {
+  suspend fun loginUser(username: String, password: String, onResponse: (Throwable?) -> Unit) {
     // TODO: Implement this with Retrofit
   }
 
-  suspend fun getMovies(): List<MovieReview> {
-    return emptyList()
+  suspend fun getMovies(onResponse: (List<MovieReview>?, Throwable?) -> Unit) {
+    // TODO: Implement this with Retrofit
   }
 
-  suspend fun getProfile(): User {
-    return User("", "")
+  fun getProfile(onResponse: (User?, Throwable?) -> Unit) {
+    // TODO: Implement in the last lesson with auth.
+  }
+
+  fun postReview(movieReview: MovieReview, onResponse: (MovieReview?, Throwable?) -> Unit) {
+    // TODO: Implement in the last lesson with auth.
   }
 }

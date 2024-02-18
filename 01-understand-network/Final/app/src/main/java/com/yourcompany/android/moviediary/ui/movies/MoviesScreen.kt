@@ -28,7 +28,7 @@
  * THE SOFTWARE.
  */
 
-package com.yourcompany.android.moviediary.ui.home
+package com.yourcompany.android.moviediary.ui.movies
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -55,12 +55,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.yourcompany.android.moviediary.model.MovieReview
 import com.yourcompany.android.moviediary.networking.MovieDiaryApi
-import com.yourcompany.android.moviediary.ui.movies.MovieItem
-import com.yourcompany.android.moviediary.ui.movies.NewEntryDialog
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(
+fun MoviesScreen(
   movieDiaryApi: MovieDiaryApi,
   onProfileTapped: () -> Unit,
 ) {
@@ -70,17 +68,39 @@ fun HomeScreen(
   var movieReviewList by remember { mutableStateOf<List<MovieReview>>(emptyList()) }
 
   LaunchedEffect(Unit) {
-    // TODO: Implement getMovies here
+    movieDiaryApi.getMovies { movies, error ->
+      if (!movies.isNullOrEmpty()) {
+        movieReviewList = movies
+      } else {
+        screenScope.launch {
+          scaffoldState.snackbarHostState.showSnackbar(error?.message ?: "")
+        }
+      }
+    }
   }
 
   if (openDialog) {
     NewEntryDialog(
       onDismissRequest = { openDialog = false },
-      onConfirmation = {// TODO: Implement post new entry
-      }
+      onConfirmation = { movieReview ->
+        movieDiaryApi.postReview(movieReview, onResponse = { newReview, error ->
+          if (newReview != null) {
+            val newList = movieReviewList.toMutableList()
+            newList.add(newReview)
+            movieReviewList = newList
+          } else {
+            screenScope.launch {
+              scaffoldState.snackbarHostState.showSnackbar(error?.message ?: "")
+            }
+          }
+        })
+        openDialog = false
+      },
     )
   }
-  Scaffold(topBar = {
+  Scaffold(
+    scaffoldState = scaffoldState,
+    topBar = {
     TopAppBar(title = {
       Text(text = "MovieDiary")
     }, actions = {

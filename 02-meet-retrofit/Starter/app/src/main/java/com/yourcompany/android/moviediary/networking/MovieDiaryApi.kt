@@ -87,7 +87,7 @@ class MovieDiaryApi {
           onUserRegistered(response.toString(), null)
         }
       } catch (error: Throwable) {
-        onUserRegistered(null, error)
+        onUserRegistered(null, Throwable("An error occurred. Please try again."))
       } finally {
         connection.disconnect()
       }
@@ -97,11 +97,15 @@ class MovieDiaryApi {
     // TODO: Implement this with Retrofit
   }
 
-  suspend fun getMovies(): List<MovieReview> {
-    return emptyList()
+  suspend fun getMovies(onResponse: (List<MovieReview>?, Throwable?) -> Unit) {
+    // TODO: Implement this with Retrofit
   }
 
-  suspend fun getMe(): User {
-    return User("", "")
+  fun getProfile(onResponse: (User?, Throwable?) -> Unit) {
+    // TODO: Implement in the last lesson with auth.
+  }
+
+  fun postReview(movieReview: MovieReview, onResponse: (MovieReview?, Throwable?) -> Unit) {
+    // TODO: Implement in the last lesson with auth.
   }
 }

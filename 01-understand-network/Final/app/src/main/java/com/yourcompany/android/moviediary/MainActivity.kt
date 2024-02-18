@@ -43,11 +43,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.getSystemService
-import com.yourcompany.android.moviediary.ui.home.HomeScreen
 import com.yourcompany.android.moviediary.ui.login.LoginScreen
 import com.yourcompany.android.moviediary.ui.navigation.Screens
 import com.yourcompany.android.moviediary.networking.ConnectivityChecker
 import com.yourcompany.android.moviediary.networking.MovieDiaryApi
+import com.yourcompany.android.moviediary.ui.movies.MoviesScreen
+import com.yourcompany.android.moviediary.ui.profile.ProfileScreen
 import com.yourcompany.android.moviediary.ui.register.RegisterScreen
 import com.yourcompany.android.moviediary.ui.theme.MovieDiaryTheme
 
@@ -69,7 +70,7 @@ class MainActivity : ComponentActivity() {
       MovieDiaryTheme {
         // A surface container using the 'background' color from the theme
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-          if (userLoggedIn) currentScreen = Screens.HOME else Screens.LOGIN
+          if (userLoggedIn) currentScreen = Screens.MOVIES else Screens.LOGIN
           when (currentScreen) {
             Screens.LOGIN -> {
               LoginScreen(
@@ -88,8 +89,21 @@ class MainActivity : ComponentActivity() {
                 onLoginTapped = { currentScreen = Screens.LOGIN })
             }
 
-            Screens.HOME -> {
-              HomeScreen()
+            Screens.MOVIES -> {
+              MoviesScreen(
+                movieDiaryApi = movieApi,
+                onProfileTapped = { currentScreen = Screens.PROFILE },
+              )
+            }
+
+            Screens.PROFILE -> {
+              ProfileScreen(
+                movieDiaryApi = movieApi,
+                onBack = { currentScreen = Screens.MOVIES },
+                onLogout = {
+                  App.saveUserToken("")
+                  currentScreen = Screens.LOGIN
+                })
             }
           }
         }

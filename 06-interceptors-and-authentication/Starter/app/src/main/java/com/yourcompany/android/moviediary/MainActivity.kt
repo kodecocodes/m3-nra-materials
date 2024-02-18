@@ -47,7 +47,7 @@ import com.yourcompany.android.moviediary.networking.ConnectivityChecker
 import com.yourcompany.android.moviediary.networking.MovieDiaryApi
 import com.yourcompany.android.moviediary.networking.buildMovieDiaryService
 import com.yourcompany.android.moviediary.ui.login.LoginScreen
-import com.yourcompany.android.moviediary.ui.movies.HomeScreen
+import com.yourcompany.android.moviediary.ui.movies.MoviesScreen
 import com.yourcompany.android.moviediary.ui.navigation.Screens
 import com.yourcompany.android.moviediary.ui.profile.ProfileScreen
 import com.yourcompany.android.moviediary.ui.register.RegisterScreen
@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     setContent {
       var userLoggedIn by remember { mutableStateOf(App.getUserToken().isNotBlank()) }
-      var currentScreen by remember { mutableStateOf(if (userLoggedIn) Screens.HOME else Screens.LOGIN) }
+      var currentScreen by remember { mutableStateOf(if (userLoggedIn) Screens.MOVIES else Screens.LOGIN) }
 
       MovieDiaryTheme {
         // A surface container using the 'background' color from the theme
@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
                 onLogin = { loginResponse ->
                   App.saveUserToken(loginResponse.token)
                   userLoggedIn = true
-                  currentScreen = Screens.HOME
+                  currentScreen = Screens.MOVIES
                 },
                 onRegisterTapped = { currentScreen = Screens.REGISTER }
               )
@@ -93,8 +93,8 @@ class MainActivity : ComponentActivity() {
                 onLoginTapped = { currentScreen = Screens.LOGIN })
             }
 
-            Screens.HOME -> {
-              HomeScreen(
+            Screens.MOVIES -> {
+              MoviesScreen(
                 movieDiaryApi = movieApi,
                 onProfileTapped = { currentScreen = Screens.PROFILE },
               )
@@ -103,7 +103,7 @@ class MainActivity : ComponentActivity() {
             Screens.PROFILE -> {
               ProfileScreen(
                 movieDiaryApi = movieApi,
-                onBack = { currentScreen = Screens.HOME },
+                onBack = { currentScreen = Screens.MOVIES },
                 onLogout = {
                   App.saveUserToken("")
                   currentScreen = Screens.LOGIN

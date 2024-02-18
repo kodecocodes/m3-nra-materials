@@ -55,7 +55,8 @@ class MovieDiaryApi {
         put("password", password)
       }
 
-      val connection = URL("https://http-api-93211a10efe2.herokuapp.com/user/register").openConnection() as HttpsURLConnection
+      val connection =
+        URL("https://http-api-93211a10efe2.herokuapp.com/user/register").openConnection() as HttpsURLConnection
       connection.apply {
         setRequestProperty("Content-Type", "application/json")
         setRequestProperty("Accept", "application/json")
@@ -96,11 +97,15 @@ class MovieDiaryApi {
     // TODO: Implement this with Retrofit
   }
 
-  suspend fun getMovies(): List<MovieReview> {
-    return emptyList()
+  suspend fun getMovies(onResponse: (List<MovieReview>?, Throwable?) -> Unit) {
+    // TODO: Implement this with Retrofit
   }
 
-  suspend fun getMe(): User {
-    return User("", "")
+  fun getProfile(onResponse: (User?, Throwable?) -> Unit) {
+    // TODO: Implement in the last lesson with auth.
+  }
+
+  fun postReview(movieReview: MovieReview, onResponse: (MovieReview?, Throwable?) -> Unit) {
+    // TODO: Implement in the last lesson with auth.
   }
 }

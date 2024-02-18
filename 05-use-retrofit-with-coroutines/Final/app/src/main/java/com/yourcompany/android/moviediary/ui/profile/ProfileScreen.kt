@@ -73,7 +73,9 @@ fun ProfileScreen(
       .onFailure { scaffoldState.snackbarHostState.showSnackbar(it.message ?: "") }
   }
 
-  Scaffold(topBar = {
+  Scaffold(
+    scaffoldState = scaffoldState,
+    topBar = {
     TopAppBar(
       title = {
         Text(text = "MovieDiary")

@@ -95,11 +95,15 @@ class MovieDiaryApi(private val apiService: MovieDiaryApiService) {
     // TODO: Implement this with Retrofit
   }
 
-  suspend fun getMovies(): List<MovieReview> {
-    return emptyList()
+  fun getMovies(onResponse: (List<MovieReview>?, Throwable?) -> Unit) {
+    // TODO: Implement this with Retrofit
   }
 
-  suspend fun getProfile(): User {
-    return User("", "")
+  fun getProfile(onResponse: (User?, Throwable?) -> Unit) {
+    // TODO: Implement in the last lesson with auth.
+  }
+
+  fun postReview(movieReview: MovieReview, onResponse: (MovieReview?, Throwable?) -> Unit) {
+    // TODO: Implement in the last lesson with auth.
   }
 }

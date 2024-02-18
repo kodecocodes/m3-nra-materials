@@ -58,7 +58,7 @@ import com.yourcompany.android.moviediary.networking.MovieDiaryApi
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(
+fun MoviesScreen(
   movieDiaryApi: MovieDiaryApi,
   onProfileTapped: () -> Unit,
 ) {
@@ -68,47 +68,45 @@ fun HomeScreen(
   var movieReviewList by remember { mutableStateOf<List<MovieReview>>(emptyList()) }
 
   LaunchedEffect(Unit) {
-    movieDiaryApi.getMovies { movies, throwable ->
-      if (!movies.isNullOrEmpty()) {
-        movieReviewList = movies
-      }
-    }
+    movieDiaryApi.getMovies()
+      .onSuccess { movieReviewList = it }
+      .onFailure { scaffoldState.snackbarHostState.showSnackbar(it.message ?: "") }
   }
 
   if (openDialog) {
     NewEntryDialog(
       onDismissRequest = { openDialog = false },
       onConfirmation = { movieReview ->
-        movieDiaryApi.postReview(movieReview, onResponse = { newReview, error ->
-          if (newReview != null) {
-            val newList = movieReviewList.toMutableList()
-            newList.add(newReview)
-            movieReviewList = newList
-          } else {
-            screenScope.launch {
-              scaffoldState.snackbarHostState.showSnackbar(error?.message ?: "")
+        screenScope.launch {
+          movieDiaryApi.postReview(movieReview)
+            .onSuccess { newReview ->
+              val newList = movieReviewList.toMutableList()
+              newList += newReview
+              movieReviewList = newList
             }
-          }
-        })
+            .onFailure { scaffoldState.snackbarHostState.showSnackbar(it.message ?: "") }
+        }
         openDialog = false
       },
     )
   }
-  Scaffold(topBar = {
-    TopAppBar(title = {
-      Text(text = "MovieDiary")
-    }, actions = {
-      IconButton(onClick = {
-        screenScope.launch { onProfileTapped() }
-      }) {
-        Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "Profile icon")
+  Scaffold(
+    scaffoldState = scaffoldState,
+    topBar = {
+      TopAppBar(title = {
+        Text(text = "MovieDiary")
+      }, actions = {
+        IconButton(onClick = {
+          screenScope.launch { onProfileTapped() }
+        }) {
+          Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "Profile icon")
+        }
+      })
+    }, floatingActionButton = {
+      FloatingActionButton(onClick = { openDialog = true }) {
+        Icon(imageVector = Icons.Default.Add, contentDescription = "Add new entry")
       }
-    })
-  }, floatingActionButton = {
-    FloatingActionButton(onClick = { openDialog = true }) {
-      Icon(imageVector = Icons.Default.Add, contentDescription = "Add new entry")
-    }
-  }) { paddingValues ->
+    }) { paddingValues ->
     Column(modifier = Modifier.padding(paddingValues)) {
       LazyColumn(content = {
         items(movieReviewList.size) { index ->
