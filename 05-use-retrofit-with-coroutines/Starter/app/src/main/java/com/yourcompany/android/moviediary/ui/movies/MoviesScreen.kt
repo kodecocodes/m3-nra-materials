@@ -28,7 +28,7 @@ import com.yourcompany.android.moviediary.networking.MovieDiaryApi
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(
+fun MoviesScreen(
   movieDiaryApi: MovieDiaryApi,
   onProfileTapped: () -> Unit,
 ) {
@@ -38,9 +38,13 @@ fun HomeScreen(
   var movieReviewList by remember { mutableStateOf<List<MovieReview>>(emptyList()) }
 
   LaunchedEffect(Unit) {
-    movieDiaryApi.getMovies { movies, throwable ->
+    movieDiaryApi.getMovies { movies, error ->
       if (!movies.isNullOrEmpty()) {
         movieReviewList = movies
+      } else {
+        screenScope.launch {
+          scaffoldState.snackbarHostState.showSnackbar(error?.message ?: "")
+        }
       }
     }
   }

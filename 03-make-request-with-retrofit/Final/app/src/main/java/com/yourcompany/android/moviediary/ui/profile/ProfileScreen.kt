@@ -35,6 +35,7 @@ fun ProfileScreen(
   val screenScope = rememberCoroutineScope()
   val scaffoldState = rememberScaffoldState()
   var user by remember { mutableStateOf(User("", "")) }
+
   LaunchedEffect(Unit) {
     movieDiaryApi.getProfile { userResponse, throwable ->
       if (userResponse != null) {

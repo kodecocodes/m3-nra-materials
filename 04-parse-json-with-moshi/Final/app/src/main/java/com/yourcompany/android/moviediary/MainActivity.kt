@@ -47,7 +47,7 @@ import com.yourcompany.android.moviediary.networking.ConnectivityChecker
 import com.yourcompany.android.moviediary.networking.MovieDiaryApi
 import com.yourcompany.android.moviediary.networking.buildMovieDiaryService
 import com.yourcompany.android.moviediary.ui.login.LoginScreen
-import com.yourcompany.android.moviediary.ui.movies.HomeScreen
+import com.yourcompany.android.moviediary.ui.movies.MoviesScreen
 import com.yourcompany.android.moviediary.ui.navigation.Screens
 import com.yourcompany.android.moviediary.ui.profile.ProfileScreen
 import com.yourcompany.android.moviediary.ui.register.RegisterScreen
@@ -94,7 +94,7 @@ class MainActivity : ComponentActivity() {
             }
 
             Screens.MOVIES -> {
-              HomeScreen(
+              MoviesScreen(
                 movieDiaryApi = movieApi,
                 onProfileTapped = { currentScreen = Screens.PROFILE },
               )
