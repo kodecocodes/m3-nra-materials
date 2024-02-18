@@ -60,21 +60,23 @@ fun MoviesScreen(
       },
     )
   }
-  Scaffold(topBar = {
-    TopAppBar(title = {
-      Text(text = "MovieDiary")
-    }, actions = {
-      IconButton(onClick = {
-        screenScope.launch { onProfileTapped() }
-      }) {
-        Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "Profile icon")
+  Scaffold(
+    scaffoldState = scaffoldState,
+    topBar = {
+      TopAppBar(title = {
+        Text(text = "MovieDiary")
+      }, actions = {
+        IconButton(onClick = {
+          screenScope.launch { onProfileTapped() }
+        }) {
+          Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "Profile icon")
+        }
+      })
+    }, floatingActionButton = {
+      FloatingActionButton(onClick = { openDialog = true }) {
+        Icon(imageVector = Icons.Default.Add, contentDescription = "Add new entry")
       }
-    })
-  }, floatingActionButton = {
-    FloatingActionButton(onClick = { openDialog = true }) {
-      Icon(imageVector = Icons.Default.Add, contentDescription = "Add new entry")
-    }
-  }) { paddingValues ->
+    }) { paddingValues ->
     Column(modifier = Modifier.padding(paddingValues)) {
       LazyColumn(content = {
         items(movieReviewList.size) { index ->

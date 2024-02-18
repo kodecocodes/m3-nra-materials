@@ -47,7 +47,9 @@ fun ProfileScreen(
     }
   }
 
-  Scaffold(topBar = {
+  Scaffold(
+    scaffoldState = scaffoldState,
+    topBar = {
     TopAppBar(
       title = {
         Text(text = "MovieDiary")

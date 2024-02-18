@@ -43,26 +43,27 @@ fun ProfileScreen(
       .onFailure { scaffoldState.snackbarHostState.showSnackbar(it.message ?: "") }
   }
 
-  Scaffold(topBar = {
-    TopAppBar(
-      title = {
-        Text(text = "MovieDiary")
-      },
-      navigationIcon = {
-        IconButton(onClick = { onBack() }) {
-          Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Go back")
+  Scaffold(scaffoldState = scaffoldState,
+    topBar = {
+      TopAppBar(
+        title = {
+          Text(text = "MovieDiary")
+        },
+        navigationIcon = {
+          IconButton(onClick = { onBack() }) {
+            Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Go back")
+          }
+        },
+        actions = {
+          IconButton(
+            onClick = {
+              screenScope.launch { onLogout() }
+            }) {
+            Icon(imageVector = Icons.Default.ExitToApp, contentDescription = "Profile icon")
+          }
         }
-      },
-      actions = {
-        IconButton(
-          onClick = {
-            screenScope.launch { onLogout() }
-          }) {
-          Icon(imageVector = Icons.Default.ExitToApp, contentDescription = "Profile icon")
-        }
-      }
-    )
-  }
+      )
+    }
   ) { paddingValues ->
     Column(Modifier.padding(paddingValues)) {
       Card(

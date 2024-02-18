@@ -68,7 +68,9 @@ fun MoviesScreen(
       },
     )
   }
-  Scaffold(topBar = {
+  Scaffold(
+    scaffoldState = scaffoldState,
+    topBar = {
     TopAppBar(title = {
       Text(text = "MovieDiary")
     }, actions = {
