@@ -28,7 +28,7 @@
  * THE SOFTWARE.
  */
 
-package com.yourcompany.android.moviediary.ui.movies
+package com.yourcompany.android.moviediary.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -55,6 +55,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.yourcompany.android.moviediary.model.MovieReview
 import com.yourcompany.android.moviediary.networking.MovieDiaryApi
+import com.yourcompany.android.moviediary.ui.movies.MovieItem
+import com.yourcompany.android.moviediary.ui.movies.NewEntryDialog
 import kotlinx.coroutines.launch
 
 @Composable

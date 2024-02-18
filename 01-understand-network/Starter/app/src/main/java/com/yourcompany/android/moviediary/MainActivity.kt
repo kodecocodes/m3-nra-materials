@@ -45,7 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.content.getSystemService
 import com.yourcompany.android.moviediary.networking.MovieDiaryApi
 import com.yourcompany.android.moviediary.ui.login.LoginScreen
-import com.yourcompany.android.moviediary.ui.movies.HomeScreen
+import com.yourcompany.android.moviediary.ui.home.HomeScreen
 import com.yourcompany.android.moviediary.ui.navigation.Screens
 import com.yourcompany.android.moviediary.ui.profile.ProfileScreen
 import com.yourcompany.android.moviediary.ui.register.RegisterScreen
