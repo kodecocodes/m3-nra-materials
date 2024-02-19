@@ -100,6 +100,7 @@ fun LoginScreen(
         focusManager.clearFocus()
         screenScope.launch {
           if (username.isNotBlank() && password.isNotBlank()) {
+            // TODO: Add network check 
             movieDiaryApi.loginUser(username, password) { token, error ->
               if (token == null) {
                 screenScope.launch {
@@ -109,7 +110,9 @@ fun LoginScreen(
                 onLogin(token)
               }
             }
-          } else {
+          }
+          // TODO: Handle no network state
+          else {
             scaffoldState.snackbarHostState.showSnackbar("Please fill in all the fields.")
           }
         }
