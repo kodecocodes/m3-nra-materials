@@ -32,6 +32,8 @@ package com.yourcompany.android.moviediary.networking
 
 import com.yourcompany.android.moviediary.model.MovieReview
 import com.yourcompany.android.moviediary.model.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class MovieDiaryApi {
 
@@ -40,7 +42,7 @@ class MovieDiaryApi {
     email: String,
     password: String,
     onUserRegistered: (String?, Throwable?) -> Unit,
-  ) {
+  ) = withContext(Dispatchers.IO) {
     // TODO: Implement with HttpsUrlConnection
   }
 
