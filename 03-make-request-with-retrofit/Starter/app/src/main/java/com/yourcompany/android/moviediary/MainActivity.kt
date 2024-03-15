@@ -104,7 +104,10 @@ class MainActivity : ComponentActivity() {
               ProfileScreen(
                 movieDiaryApi = movieApi,
                 onBack = { currentScreen = Screens.MOVIES },
-                onLogout = { currentScreen = Screens.LOGIN })
+                onLogout = {
+                  App.saveUserToken("")
+                  userLoggedIn = false
+                  currentScreen = Screens.LOGIN })
             }
           }
         }
