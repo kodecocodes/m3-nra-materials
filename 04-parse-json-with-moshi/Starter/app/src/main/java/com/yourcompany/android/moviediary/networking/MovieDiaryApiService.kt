@@ -49,7 +49,7 @@ interface MovieDiaryApiService {
   @GET("user")
   fun getProfile(): Call<ResponseBody>
 
-  @GET("movies")
+  @GET("sampleMovies")
   fun getMovies(): Call<ResponseBody>
 
   @POST("movies")

@@ -48,7 +48,7 @@ interface MovieDiaryApiService {
   @POST("user/login")
   fun loginUser(@Body registerBody: RegisterBody): Call<LoginResponse>
 
-  @GET("movies")
+  @GET("sampleMovies")
   fun getMovies(): Call<List<MovieReview>>
 
   @GET("user")
