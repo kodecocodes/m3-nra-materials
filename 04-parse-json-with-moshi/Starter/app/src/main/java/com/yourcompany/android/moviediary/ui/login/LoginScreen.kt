@@ -55,6 +55,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.yourcompany.android.moviediary.model.response.LoginResponse
 import com.yourcompany.android.moviediary.networking.ConnectivityChecker
 import com.yourcompany.android.moviediary.networking.MovieDiaryApi
 import kotlinx.coroutines.launch
@@ -63,7 +64,7 @@ import kotlinx.coroutines.launch
 fun LoginScreen(
   movieDiaryApi: MovieDiaryApi,
   connectivityChecker: ConnectivityChecker,
-  onLogin: (String) -> Unit,
+  onLogin: (LoginResponse) -> Unit,
   onRegisterTapped: () -> Unit,
 ) {
   val scaffoldState = rememberScaffoldState()
@@ -103,13 +104,13 @@ fun LoginScreen(
         screenScope.launch {
           if (username.isNotBlank() && password.isNotBlank()) {
             if (connectivityChecker.hasNetworkConnection()) {
-              movieDiaryApi.loginUser(username, password) { token, error ->
-                if (token == null) {
+              movieDiaryApi.loginUser(username, password) { loginResponse, error ->
+                if (loginResponse == null) {
                   screenScope.launch {
                     scaffoldState.snackbarHostState.showSnackbar(error?.message ?: "")
                   }
                 } else {
-                  onLogin(token)
+                  onLogin(loginResponse)
                 }
               }
             } else {
