@@ -76,8 +76,8 @@ class MainActivity : ComponentActivity() {
               LoginScreen(
                 movieDiaryApi = movieApi,
                 connectivityChecker = connectivityChecker,
-                onLogin = { loginResponse ->
-                  App.saveUserToken(loginResponse.token)
+                onLogin = { token ->
+                  App.saveUserToken(token)
                   userLoggedIn = true
                   currentScreen = Screens.MOVIES
                 },
@@ -104,7 +104,11 @@ class MainActivity : ComponentActivity() {
               ProfileScreen(
                 movieDiaryApi = movieApi,
                 onBack = { currentScreen = Screens.MOVIES },
-                onLogout = { currentScreen = Screens.LOGIN })
+                onLogout = {
+                  App.saveUserToken("")
+                  userLoggedIn = false
+                  currentScreen = Screens.LOGIN
+                })
             }
           }
         }

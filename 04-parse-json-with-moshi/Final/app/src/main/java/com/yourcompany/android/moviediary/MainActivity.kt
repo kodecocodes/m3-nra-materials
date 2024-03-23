@@ -106,6 +106,7 @@ class MainActivity : ComponentActivity() {
                 onBack = { currentScreen = Screens.MOVIES },
                 onLogout = {
                   App.saveUserToken("")
+                  userLoggedIn = false
                   currentScreen = Screens.LOGIN
                 })
             }
