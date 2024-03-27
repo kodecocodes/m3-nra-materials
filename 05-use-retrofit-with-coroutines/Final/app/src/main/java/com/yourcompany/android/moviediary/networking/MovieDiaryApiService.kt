@@ -49,7 +49,7 @@ interface MovieDiaryApiService {
   @POST("user/login")
   suspend fun loginUser(@Body registerBody: RegisterBody): LoginResponse
 
-  @GET("movies")
+  @GET("sampleMovies")
   suspend fun getMovies(): List<MovieReview>
 
   @GET("user")
