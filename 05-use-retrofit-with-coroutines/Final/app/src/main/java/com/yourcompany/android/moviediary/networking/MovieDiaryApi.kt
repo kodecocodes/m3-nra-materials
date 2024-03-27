@@ -62,8 +62,11 @@ class MovieDiaryApi(private val apiService: MovieDiaryApiService) {
 
   suspend fun getMovies(): Result<List<MovieReview>> = runCatching { apiService.getMovies() }
 
-  suspend fun getProfile(): Result<User> = runCatching { apiService.getProfile() }
+  fun getProfile(onResponse: (User?, Throwable?) -> Unit) {
+    // TODO: Implement in the last lesson with auth.
+  }
 
-  suspend fun postReview(movieReview: MovieReview): Result<MovieReview> =
-    runCatching { apiService.postReview(movieReview) }
+  fun postReview(movieReview: MovieReview, onResponse: (MovieReview?, Throwable?) -> Unit) {
+    // TODO: Implement in the last lesson with auth.
+  }
 }
