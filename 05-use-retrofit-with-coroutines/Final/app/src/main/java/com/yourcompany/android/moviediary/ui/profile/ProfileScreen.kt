@@ -68,9 +68,15 @@ fun ProfileScreen(
   var user by remember { mutableStateOf(User("", "")) }
 
   LaunchedEffect(Unit) {
-    movieDiaryApi.getProfile()
-      .onSuccess { user = it }
-      .onFailure { scaffoldState.snackbarHostState.showSnackbar(it.message ?: "") }
+    movieDiaryApi.getProfile { userResponse, throwable ->
+      if (userResponse != null) {
+        user = userResponse
+      } else {
+        screenScope.launch {
+          scaffoldState.snackbarHostState.showSnackbar(throwable?.message ?: "")
+        }
+      }
+    }
   }
 
   Scaffold(

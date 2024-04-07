@@ -77,16 +77,17 @@ fun MoviesScreen(
     NewEntryDialog(
       onDismissRequest = { openDialog = false },
       onConfirmation = { movieReview ->
-        screenScope.launch {
-          movieDiaryApi.postReview(movieReview)
-            .onSuccess { newReview ->
-              val newList = movieReviewList.toMutableList()
-              newList += newReview
-              movieReviewList = newList
+        movieDiaryApi.postReview(movieReview, onResponse = { newReview, error ->
+          if (newReview != null) {
+            val newList = movieReviewList.toMutableList()
+            newList.add(newReview)
+            movieReviewList = newList
+          } else {
+            screenScope.launch {
+              scaffoldState.snackbarHostState.showSnackbar(error?.message ?: "")
             }
-            .onFailure { scaffoldState.snackbarHostState.showSnackbar(it.message ?: "") }
-        }
-        openDialog = false
+          }
+        })
       },
     )
   }
