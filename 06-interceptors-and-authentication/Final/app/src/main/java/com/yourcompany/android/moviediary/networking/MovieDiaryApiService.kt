@@ -57,4 +57,7 @@ interface MovieDiaryApiService {
 
   @POST("movies")
   suspend fun postReview(@Body movieReview: MovieReview): MovieReview
+
+  @POST("user/refreshToken")
+  suspend fun refreshToken(@Body refreshToken: Long): LoginResponse
 }
