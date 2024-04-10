@@ -31,16 +31,24 @@
 package com.yourcompany.android.moviediary.networking
 
 import com.yourcompany.android.moviediary.App
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
 
 class ApiAuthenticator : Authenticator {
-  override fun authenticate(route: Route?, response: Response): Request {
-    val token = App.getUserToken()
-    return response.request.newBuilder()
-      .addHeader("Authorization", "Bearer $token")
-      .build()
+  override fun authenticate(route: Route?, response: Response): Request? {
+    runBlocking {
+      App.movieApi.refreshToken(App.getRefreshToken())
+    }.onSuccess {
+      App.saveUserToken(it.token)
+      return response.request.newBuilder()
+        .addHeader("Authorization", "Bearer ${it.token}")
+        .build()
+    }
+    return null
   }
 }

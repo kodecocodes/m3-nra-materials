@@ -34,9 +34,12 @@ import android.app.Application
 import android.content.Context
 import android.os.Build
 import androidx.core.content.edit
+import com.yourcompany.android.moviediary.networking.MovieDiaryApi
+import com.yourcompany.android.moviediary.networking.buildMovieDiaryService
 
 private const val KEY_PREFERENCES = "movie_diary_preferences"
 private const val KEY_TOKEN = "token"
+private const val KEY_REFRESH_TOKEN = "refresh_token"
 
 class App : Application() {
 
@@ -48,12 +51,19 @@ class App : Application() {
   companion object {
     private lateinit var instance: App
 
+    val movieApi by lazy { MovieDiaryApi(buildMovieDiaryService()) }
     private val sharedPrefs by lazy { instance.getSharedPreferences(KEY_PREFERENCES, Context.MODE_PRIVATE) }
 
     fun saveUserToken(token: String) {
       sharedPrefs.edit { putString(KEY_TOKEN, token) }
     }
 
+    fun saveRefreshToken(token: Long) {
+      sharedPrefs.edit { putLong(KEY_REFRESH_TOKEN, token) }
+    }
+
     fun getUserToken(): String = sharedPrefs.getString(KEY_TOKEN, "") ?: ""
+
+    fun getRefreshToken(): Long = sharedPrefs.getLong(KEY_REFRESH_TOKEN, 0L)
   }
 }

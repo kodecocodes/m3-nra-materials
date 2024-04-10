@@ -66,4 +66,7 @@ class MovieDiaryApi(private val apiService: MovieDiaryApiService) {
 
   suspend fun postReview(movieReview: MovieReview): Result<MovieReview> =
     runCatching { apiService.postReview(movieReview) }
+
+  suspend fun refreshToken(refreshToken: Long): Result<LoginResponse> =
+    runCatching { apiService.refreshToken(refreshToken) }
 }
