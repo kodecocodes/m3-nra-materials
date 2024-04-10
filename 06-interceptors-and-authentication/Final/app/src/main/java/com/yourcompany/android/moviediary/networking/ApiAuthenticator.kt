@@ -44,6 +44,7 @@ class ApiAuthenticator : Authenticator {
     runBlocking {
       App.movieApi.refreshToken(App.getRefreshToken())
     }.onSuccess {
+      App.saveUserToken(it.token)
       return response.request.newBuilder()
         .addHeader("Authorization", "Bearer ${it.token}")
         .build()
