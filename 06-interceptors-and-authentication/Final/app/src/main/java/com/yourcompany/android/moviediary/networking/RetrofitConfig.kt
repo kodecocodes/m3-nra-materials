@@ -56,7 +56,10 @@ private fun buildLoggingInterceptor() = HttpLoggingInterceptor()
   .setLevel(if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE)
 
 private fun buildAuthInterceptor() = Interceptor { chain ->
-  val newRequest = chain.request().newBuilder().addHeader("Authorization", "Bearer ${App.getUserToken()}").build()
+  val newRequest = chain.request()
+    .newBuilder()
+    .addHeader("Authorization", "Bearer ${App.getUserToken()}")
+    .build()
   chain.proceed(newRequest)
 }
 
