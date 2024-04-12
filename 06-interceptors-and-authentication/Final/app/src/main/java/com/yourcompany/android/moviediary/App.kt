@@ -58,11 +58,11 @@ class App : Application() {
       sharedPrefs.edit { putString(KEY_TOKEN, token) }
     }
 
+    fun getUserToken(): String = sharedPrefs.getString(KEY_TOKEN, "") ?: ""
+
     fun saveRefreshToken(token: Long) {
       sharedPrefs.edit { putLong(KEY_REFRESH_TOKEN, token) }
     }
-
-    fun getUserToken(): String = sharedPrefs.getString(KEY_TOKEN, "") ?: ""
 
     fun getRefreshToken(): Long = sharedPrefs.getLong(KEY_REFRESH_TOKEN, 0L)
   }

@@ -44,8 +44,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.getSystemService
 import com.yourcompany.android.moviediary.networking.ConnectivityChecker
-import com.yourcompany.android.moviediary.networking.MovieDiaryApi
-import com.yourcompany.android.moviediary.networking.buildMovieDiaryService
 import com.yourcompany.android.moviediary.ui.login.LoginScreen
 import com.yourcompany.android.moviediary.ui.movies.MoviesScreen
 import com.yourcompany.android.moviediary.ui.navigation.Screens
@@ -55,7 +53,6 @@ import com.yourcompany.android.moviediary.ui.theme.MovieDiaryTheme
 
 class MainActivity : ComponentActivity() {
 
-  private val movieApi by lazy { MovieDiaryApi(buildMovieDiaryService()) }
   private val connectivityManager by lazy { getSystemService<ConnectivityManager>() }
   private val connectivityChecker by lazy { ConnectivityChecker(connectivityManager) }
 
@@ -74,10 +71,11 @@ class MainActivity : ComponentActivity() {
           when (currentScreen) {
             Screens.LOGIN -> {
               LoginScreen(
-                movieDiaryApi = movieApi,
+                movieDiaryApi = App.movieApi,
                 connectivityChecker = connectivityChecker,
                 onLogin = { loginResponse ->
                   App.saveUserToken(loginResponse.token)
+                  App.saveRefreshToken(loginResponse.refreshToken)
                   userLoggedIn = true
                   currentScreen = Screens.MOVIES
                 },
@@ -87,7 +85,7 @@ class MainActivity : ComponentActivity() {
 
             Screens.REGISTER -> {
               RegisterScreen(
-                movieDiaryApi = movieApi,
+                movieDiaryApi = App.movieApi,
                 connectivityChecker = connectivityChecker,
                 onUserRegistered = { currentScreen = Screens.LOGIN },
                 onLoginTapped = { currentScreen = Screens.LOGIN })
@@ -95,17 +93,18 @@ class MainActivity : ComponentActivity() {
 
             Screens.MOVIES -> {
               MoviesScreen(
-                movieDiaryApi = movieApi,
+                movieDiaryApi = App.movieApi,
                 onProfileTapped = { currentScreen = Screens.PROFILE },
               )
             }
 
             Screens.PROFILE -> {
               ProfileScreen(
-                movieDiaryApi = movieApi,
+                movieDiaryApi = App.movieApi,
                 onBack = { currentScreen = Screens.MOVIES },
                 onLogout = {
                   App.saveUserToken("")
+                  App.saveRefreshToken(0L)
                   currentScreen = Screens.LOGIN
                 })
             }
