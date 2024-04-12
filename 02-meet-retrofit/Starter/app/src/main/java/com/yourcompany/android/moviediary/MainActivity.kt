@@ -54,7 +54,6 @@ import com.yourcompany.android.moviediary.ui.theme.MovieDiaryTheme
 
 class MainActivity : ComponentActivity() {
 
-  private val movieApi = MovieDiaryApi()
   private val connectivityManager by lazy { getSystemService<ConnectivityManager>() }
   private val connectivityChecker by lazy { ConnectivityChecker(connectivityManager) }
 
@@ -74,7 +73,7 @@ class MainActivity : ComponentActivity() {
           when (currentScreen) {
             Screens.LOGIN -> {
               LoginScreen(
-                movieApi,
+                App.movieApi,
                 connectivityChecker,
                 onLogin = { token ->
                   App.saveUserToken(token)
@@ -87,7 +86,7 @@ class MainActivity : ComponentActivity() {
 
             Screens.REGISTER -> {
               RegisterScreen(
-                movieDiaryApi = movieApi,
+                movieDiaryApi = App.movieApi,
                 connectivityChecker = connectivityChecker,
                 onUserRegistered = { currentScreen = Screens.LOGIN },
                 onLoginTapped = { currentScreen = Screens.LOGIN })
@@ -95,17 +94,18 @@ class MainActivity : ComponentActivity() {
 
             Screens.MOVIES -> {
               MoviesScreen(
-                movieDiaryApi = movieApi,
+                movieDiaryApi = App.movieApi,
                 onProfileTapped = { currentScreen = Screens.PROFILE },
               )
             }
 
             Screens.PROFILE -> {
               ProfileScreen(
-                movieDiaryApi = movieApi,
+                movieDiaryApi = App.movieApi,
                 onBack = { currentScreen = Screens.MOVIES },
                 onLogout = {
                   App.saveUserToken("")
+                  App.saveRefreshToken(0L)
                   currentScreen = Screens.LOGIN
                 })
             }

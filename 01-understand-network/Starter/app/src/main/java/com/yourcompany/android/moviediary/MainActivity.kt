@@ -43,7 +43,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.getSystemService
-import com.yourcompany.android.moviediary.networking.MovieDiaryApi
 import com.yourcompany.android.moviediary.ui.login.LoginScreen
 import com.yourcompany.android.moviediary.ui.movies.MoviesScreen
 import com.yourcompany.android.moviediary.ui.navigation.Screens
@@ -53,7 +52,6 @@ import com.yourcompany.android.moviediary.ui.theme.MovieDiaryTheme
 
 class MainActivity : ComponentActivity() {
 
-  private val movieApi by lazy { MovieDiaryApi() }
   private val connectivityManager by lazy { getSystemService<ConnectivityManager>() }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +69,7 @@ class MainActivity : ComponentActivity() {
           when (currentScreen) {
             Screens.LOGIN -> {
               LoginScreen(
-                movieDiaryApi = movieApi,
+                movieDiaryApi = App.movieApi,
                 onLogin = { token ->
                   App.saveUserToken(token)
                   userLoggedIn = true
@@ -83,24 +81,25 @@ class MainActivity : ComponentActivity() {
 
             Screens.REGISTER -> {
               RegisterScreen(
-                movieDiaryApi = movieApi,
+                movieDiaryApi = App.movieApi,
                 onUserRegistered = { currentScreen = Screens.LOGIN },
                 onLoginTapped = { currentScreen = Screens.LOGIN })
             }
 
             Screens.MOVIES -> {
               MoviesScreen(
-                movieDiaryApi = movieApi,
+                movieDiaryApi = App.movieApi,
                 onProfileTapped = { currentScreen = Screens.PROFILE },
               )
             }
 
             Screens.PROFILE -> {
               ProfileScreen(
-                movieDiaryApi = movieApi,
+                movieDiaryApi = App.movieApi,
                 onBack = { currentScreen = Screens.MOVIES },
                 onLogout = {
                   App.saveUserToken("")
+                  App.saveRefreshToken(0L)
                   currentScreen = Screens.LOGIN
                 })
             }

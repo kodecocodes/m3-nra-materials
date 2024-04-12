@@ -45,6 +45,4 @@ private fun buildRetrofit(): Retrofit = Retrofit.Builder()
   .addConverterFactory(MoshiConverterFactory.create().asLenient())
   .build()
 
-fun buildMoshi(): Moshi = Moshi.Builder().build()
-
 fun buildMovieDiaryService(): MovieDiaryApiService = buildRetrofit().create(MovieDiaryApiService::class.java)
